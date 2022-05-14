@@ -1,4 +1,5 @@
 using UnityEngine;
+using TMPro;
 
 public class Player : MovingObject
 {
@@ -7,6 +8,8 @@ public class Player : MovingObject
     public int pointsForSoda = 20;
 
     public float restartLevelDelay = 1f;
+
+    public TextMeshProUGUI foodText;
 
     private int food;
 
@@ -17,6 +20,8 @@ public class Player : MovingObject
         animator = GetComponent<Animator>();
 
         food = GameManager.instance.playerFoodPoints;
+
+        foodText.text = "Food: " + food;
 
         base.Start();
     }
@@ -53,6 +58,7 @@ public class Player : MovingObject
     protected override void AttemptMove<T>(int xDir, int yDir)
     {
         food--;
+        foodText.text = "Food: " + food;
 
         base.AttemptMove<T>(xDir, yDir);
 
@@ -78,6 +84,7 @@ public class Player : MovingObject
     {
         animator.SetTrigger("playerHit");
         food -= loss;
+        foodText.text = "-" + loss + " Food: " + food;
         CheckIfGameOver();
     }
     private void OnTriggerEnter2D(Collider2D other)
@@ -90,11 +97,13 @@ public class Player : MovingObject
         else if (other.tag == "Food")
         {
             food += pointsForFood;
+            foodText.text = "+" + pointsForFood + " Food: " + food;
             other.gameObject.SetActive(false);
         }
         else if (other.tag == "Soda")
         {
             food += pointsForSoda;
+            foodText.text = "+" + pointsForSoda + " Food: " + food;
             other.gameObject.SetActive(false);
         }
     }
